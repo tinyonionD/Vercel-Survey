@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>团建投票</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:linear-gradient(135deg,#fdf6e3 0%,#f0e6d2 50%,#fdf6e3 100%);min-height:100vh;padding:40px 20px}
+.container{max-width:720px;margin:0 auto;padding:24px;background:#fffef9;border-radius:20px;box-shadow:0 4px 24px rgba(0,0,0,.08)}
+.header{text-align:center;margin-bottom:8px}
+.header h1{font-size:22px;color:#3e2723;margin-bottom:4px}
+.header .subtitle{font-size:13px;color:#8d6e63}
+.cat-title{font-size:14px;font-weight:700;margin:16px 0 8px;padding:7px 12px;border-radius:10px}
+.cat-1{background:#ffe0b2;color:#e65100}.cat-2{background:#c8e6c9;color:#2e7d32}
+.cat-3{background:#d1c4e9;color:#4a148c}.cat-4{background:#ffccbc;color:#bf360c}
+.act-grid{display:flex;flex-wrap:wrap;gap:7px;margin-left:6px}
+.act-chip{display:inline-flex;align-items:center;gap:3px;padding:6px 11px;border-radius:18px;background:#fff;border:2px solid #e0d5c1;cursor:pointer;font-size:12px;transition:all .12s;user-select:none;color:#3e2723}
+.act-chip:hover{border-color:#8d6e63;transform:translateY(-1px)}
+.act-chip.checked{background:#5d4037;color:#fff;border-color:#5d4037}
+.submit-area{text-align:center;margin:18px 0 10px}
+.btn-vote{padding:11px 36px;font-size:15px;font-weight:700;border:none;border-radius:28px;cursor:pointer;background:linear-gradient(135deg,#ff8a65,#ff6e40);color:#fff;box-shadow:0 4px 14px rgba(255,110,64,.35);transition:all .2s}
+.btn-vote:hover{transform:scale(1.04)}
+.btn-vote:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.vote-hint{font-size:11px;color:#8d6e63;margin-top:5px}
+.result-panel{display:none;margin-top:14px;animation:fadeIn .4s}
+.result-panel.show{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.section-title{font-size:13px;font-weight:700;margin:12px 0 6px;padding:5px 10px;border-radius:8px}
+.s1{background:#fff3e0;color:#e65100}.s2{background:#e8f5e9;color:#2e7d32}.s3{background:#ede7f6;color:#4a148c}.s4{background:#fbe9e7;color:#bf360c}
+.bar-row{display:flex;align-items:center;gap:8px;margin:4px 0}
+.bar-label{width:200px;font-size:12px;text-align:right;flex-shrink:0;color:#5d4037}
+.bar-track{flex:1;height:20px;background:#f5f0e8;border-radius:10px;overflow:hidden}
+.bar-fill{height:100%;border-radius:10px;transition:width .5s ease}
+.bar-pct{width:38px;font-size:12px;font-weight:700;color:#5d4037;flex-shrink:0}
+.bar-1{background:linear-gradient(90deg,#ffb74d,#ff9800)}
+.bar-2{background:linear-gradient(90deg,#81c784,#4caf50)}
+.bar-3{background:linear-gradient(90deg,#b39ddb,#7e57c2)}
+.bar-4{background:linear-gradient(90deg,#ff8a65,#ff5722)}
+.roast-box{margin-top:14px;padding:14px;border-radius:12px;text-align:center;font-size:13px;font-weight:600;line-height:1.6;animation:bounceIn .5s}
+@keyframes bounceIn{0%{transform:scale(.8);opacity:0}50%{transform:scale(1.05)}100%{transform:scale(1);opacity:1}}
+.roast-1{background:#fff3e0;color:#e65100}.roast-2{background:#e8f5e9;color:#2e7d32}.roast-3{background:#ede7f6;color:#4a148c}.roast-4{background:#fbe9e7;color:#bf360c}
+.status-bar{display:flex;justify-content:center;align-items:center;gap:16px;margin-bottom:10px;font-size:13px;color:#8d6e63}
+.footer{text-align:center;margin-top:14px;font-size:10px;color:#c9b99a;line-height:2}
+.footer a{color:#c9b99a;text-decoration:none;font-size:10px;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h1>&#127881; 部门团建去哪玩？</h1>
+<div class="subtitle">匿名投票</div>
+</div>
+<div class="cat-title cat-1">&#127939; 户外运动类</div>
+<div class="act-grid">
+<span class="act-chip" data-id="1">&#127919;射箭/射击/激光打靶</span>
+<span class="act-chip" data-id="2">&#128299;真人CS/卡丁车</span>
+<span class="act-chip" data-id="3">&#127955;匹克球</span>
+<span class="act-chip" data-id="4">&#127952;排球/巨型排球/网球</span>
+<span class="act-chip" data-id="5">&#128758;皮划艇/桨板</span>
+<span class="act-chip" data-id="6">&#129359;飞盘/放风筝</span>
+<span class="act-chip" data-id="7">&#129495;攀岩</span>
+<span class="act-chip" data-id="8">&#128009;趣味接力/旱地龙舟/泡泡足球</span>
+<span class="act-chip" data-id="9">&#128692;户外骑行/露营野餐</span>
+</div>
+<div class="cat-title cat-2">&#127923; 室内球类类</div>
+<div class="act-grid">
+<span class="act-chip" data-id="10">&#127923;保龄球</span>
+<span class="act-chip" data-id="11">&#127992;羽毛球/乒乓球</span>
+<span class="act-chip" data-id="12">&#127921;台球/躲避球</span>
+</div>
+<div class="cat-title cat-3">&#128373;&#65039; 沉浸互动类</div>
+<div class="act-grid">
+<span class="act-chip" data-id="13">&#128272;密室逃脱</span>
+<span class="act-chip" data-id="14">&#128220;剧本杀</span>
+<span class="act-chip" data-id="15">&#129405;VR体验</span>
+<span class="act-chip" data-id="16">&#128123;沉浸式剧场/鬼屋</span>
+</div>
+<div class="cat-title cat-4">&#128715; 休闲放松类</div>
+<div class="act-grid">
+<span class="act-chip" data-id="17">&#127908;KTV</span>
+<span class="act-chip" data-id="18">&#127922;桌游/麻将</span>
+<span class="act-chip" data-id="19">&#127912;手作DIY</span>
+<span class="act-chip" data-id="20">&#127916;观影会/茶话会</span>
+<span class="act-chip" data-id="21">&#127881;轰趴小游戏</span>
+</div>
+<div class="submit-area">
+<button class="btn-vote" onclick="submitVote()">&#128232; 提交</button>
+<div class="vote-hint">可多选</div>
+</div>
+<div class="result-panel" id="resultPanel">
+<div class="status-bar">&#128101; 累计 <strong id="totalCount">0</strong> 票</div>
+<div id="barsContainer"></div>
+<div class="roast-box" id="roastBox"></div>
+</div>
+<div class="footer">
+Vercel<br>
+<a onclick="resetAll()">&#128260; 重置数据</a>
+</div>
+</div>
+<script>
+var VOTER_ID = localStorage.getItem('sv') || 'u'+Math.random().toString(36).slice(2,8);
+localStorage.setItem('sv', VOTER_ID);
+var selected = {};
+document.querySelectorAll('.act-chip').forEach(function(el){
+  el.onclick = function(){
+    var id = this.getAttribute('data-id');
+    if (selected[id]) { delete selected[id]; this.classList.remove('checked'); }
+    else { selected[id] = true; this.classList.add('checked'); }
+  };
+});
+var catNames = {'1':'&#127939; 户外运动','2':'&#127923; 室内球类','3':'&#128373;&#65039; 沉浸互动','4':'&#128715; 休闲放松'};
+var catColors = {'1':'bar-1','2':'bar-2','3':'bar-3','4':'bar-4'};
+var roastMessages = {
+  '1':'&#128170; 好家伙，活力四射！你们偷偷喝了红牛吗？',
+  '2':'&#127921; 室内派胜利！阳光不约，空调房才是倔强。',
+  '3':'\uD83C\uDFAD 戏精本精！给我剧本能演到HR报警。',
+  '4':'&#128564; 躺平党胜利！以不动应万动。'
+};
+
+function renderResults(data){
+  document.getElementById('totalCount').textContent = data.total_votes;
+  var maxC='1',maxN=0,html='';
+  for(var c=1;c<=4;c++){
+    var cat = data.categories[String(c)];
+    if(!cat) continue;
+    if(cat.count>maxN){maxN=cat.count;maxC=String(c);}
+    html += '<div class="section-title s'+c+'">'+catNames[c]+' <span style="font-weight:400;font-size:11px">('+cat.count+', '+cat.pct+'%)</span></div>';
+    for(var j=0;j<cat.activities.length;j++){
+      var a = cat.activities[j];
+      html += '<div class="bar-row"><span class="bar-label">'+a.name+'</span><div class="bar-track"><div class="bar-fill bar-'+c+'" style="width:'+a.pct+'%"></div></div><span class="bar-pct">'+a.pct+'%</span></div>';
+    }
+  }
+  document.getElementById('barsContainer').innerHTML = html;
+  var rb = document.getElementById('roastBox');
+  rb.className = 'roast-box roast-'+maxC;
+  rb.innerHTML = '&#128172; '+roastMessages[maxC];
+  document.getElementById('resultPanel').classList.add('show');
+}
+
+function submitVote(){
+  var aids = Object.keys(selected);
+  if(!aids.length){alert('请选择至少一个活动');return;}
+  var btn = document.querySelector('.btn-vote');
+  btn.disabled=true; btn.textContent='提交中...';
+  fetch('/api/vote',{
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({activities:aids.map(Number), voter_id:VOTER_ID})
+  }).then(function(r){return r.json();}).then(function(d){
+    if(d.ok){
+      // Get fresh results from /api/results for correct names
+      fetch('/api/results').then(function(r2){return r2.json();}).then(function(d2){
+        if(d2.ok) renderResults(d2);
+      });
+      selected = {};
+      document.querySelectorAll('.act-chip.checked').forEach(function(e){e.classList.remove('checked');});
+    }
+  }).catch(function(e){alert('连接失败');}).finally(function(){btn.disabled=false;btn.textContent='📨 再投一票';});
+}
+
+function resetAll(){
+  if(!confirm('确定重置所有投票数据？')) return;
+  fetch('/api/reset',{method:'POST'}).then(function(r){return r.json();}).then(function(d){
+    if(d.ok){
+      document.getElementById('resultPanel').classList.remove('show');
+      selected={};
+      document.querySelectorAll('.act-chip.checked').forEach(function(e){e.classList.remove('checked');});
+      var btn = document.querySelector('.btn-vote');
+      btn.textContent = '📨 提交';
+      document.getElementById('totalCount').textContent = '0';
+      document.getElementById('barsContainer').innerHTML = '';
+      alert('数据已重置');
+    }
+  }).catch(function(e){alert('重置失败');});
+}
+
+// Load results on page load
+fetch('/api/results').then(function(r){return r.json();}).then(function(d){
+  if(d.ok && d.total_votes>0) renderResults(d);
+}).catch(function(){});
+</script>
+</body>
+</html>
